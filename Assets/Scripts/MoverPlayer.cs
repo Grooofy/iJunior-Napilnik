@@ -34,14 +34,14 @@ public class MoverPlayer : MonoBehaviour
     
     private void Move()
     {
-        Vector3 movement = transform.forward * (_movementInput * _speed * Time.deltaTime);
+        Vector3 movement = transform.forward * (_movementInput * _speed * Time.fixedDeltaTime);
 
-        _rigidbody.velocity = movement;
+        _rigidbody.MovePosition(_rigidbody.position + movement);
     }
     
     private void Turn()
     {
-        float turn = _turnInput * _turnSpeed * Time.deltaTime;
+        float turn = _turnInput * _turnSpeed * Time.fixedDeltaTime;
 
         Quaternion turnRotation = Quaternion.Euler(0, turn, 0);
         _rigidbody.MoveRotation(_rigidbody.rotation * turnRotation);
