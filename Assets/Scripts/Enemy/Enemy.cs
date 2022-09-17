@@ -2,18 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using UnityEngine.Events;
 
 
 [RequireComponent(typeof(Rigidbody))]
 public class Enemy : MonoBehaviour
 {
+    [Range(0, 100)]
     [SerializeField] private int _heath;
     [SerializeField] private float _forcePush;
 
+    private const int MaxHealth = 100;
+    public event UnityAction<int> HealthCheanged;
+
     private Rigidbody _rigidbody;
     private SphereCollider _collider;
-    public int Health => _heath;
 
     private void Awake()
     {
@@ -21,6 +24,10 @@ public class Enemy : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
+    private void Start()
+    {
+        HealthCheanged?.Invoke(_heath);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -30,11 +37,19 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void Heal(int number)
+    {
+        _heath += number;
+        HealthCheanged?.Invoke(_heath);
+        if (_heath > MaxHealth)
+            _heath = MaxHealth;
+    }
+    
     public void TakeDamage(int damage)
     {
         Push();
-        _heath = damage;
-
+        _heath -= damage;
+        HealthCheanged?.Invoke(_heath);
         if (_heath <= 0)
             Die();
     }
@@ -42,6 +57,7 @@ public class Enemy : MonoBehaviour
     private void Blowup()
     {
         int damage = 50;
+        
         TakeDamage(damage);
     }
 

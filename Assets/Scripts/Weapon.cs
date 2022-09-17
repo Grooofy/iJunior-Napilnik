@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private int _damage;
+
+    protected void Shoot(Enemy enemy)
     {
-        
+        enemy.TakeDamage(_damage);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected void Heal(Enemy enemy)
     {
-        
+        enemy.Heal(_damage);
     }
 }

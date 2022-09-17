@@ -9,16 +9,23 @@ public class UIHeathEnemy : MonoBehaviour
     private TextMeshProUGUI _textHealth;
     private Camera _camera;
 
-    private void Awake()
+
+    private void OnDisable()
     {
-        _camera = Camera.main;
-        _enemy = GetComponentInParent<Enemy>();
-        _textHealth = GetComponentInChildren<TextMeshProUGUI>();
+        _enemy.HealthCheanged -= Show;
     }
 
-    private void Start()
+    private void Awake()
     {
-        _textHealth.text = _enemy.Health.ToString();
+        _enemy = GetComponentInParent<Enemy>();
+        _textHealth = GetComponentInChildren<TextMeshProUGUI>();
+        _enemy.HealthCheanged += Show;
+        _camera = Camera.main;
+    }
+
+    private void Show(int health)
+    {
+        _textHealth.text = health.ToString();
     }
 
     private void Update()
